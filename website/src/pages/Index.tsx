@@ -4,6 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, ShoppingCart, Percent, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import LiveKitWidget from "@/components/ai_avatar/LiveKitWidget";
 
+// Import images
+import balo from "@/assets/balo.jpg";
+import tainghe from "@/assets/tai-nghe.png";
+import giay from "@/assets/giay.jpg";
+import dongho from "@/assets/dongho.jpg";
+import tuixach from "@/assets/tuixach.jpg";
+import ao from "@/assets/ao.png";
+
+
 export default function Index() {
   const [showSupport, setShowSupport] = useState(false);
 
@@ -48,9 +57,9 @@ export default function Index() {
           <h3 className="text-3xl font-bold mb-10 text-center">Sản phẩm nổi bật</h3>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { title: "Tai nghe Bluetooth", price: "₫450.000", img: "/images/product1.jpg" },
-              { title: "Balo Thời Trang", price: "₫280.000", img: "/images/product2.jpg" },
-              { title: "Giày Sneaker", price: "₫800.000", img: "/images/product3.jpg" }
+              { title: "Tai nghe Bluetooth", price: "₫450.000", img: tainghe },
+              { title: "Balo Thời Trang", price: "₫280.000", img: balo },
+              { title: "Giày Sneaker", price: "₫800.000", img: giay }
             ].map((p, i) => (
               <Card key={i} className="overflow-hidden border hover:shadow-lg transition">
                 <div className="h-48 bg-gray-100">
@@ -91,10 +100,10 @@ export default function Index() {
           <h3 className="text-3xl font-bold mb-10 text-center">Sản phẩm bán chạy</h3>
           <div className="grid md:grid-cols-4 gap-8">
             {[
-              { title: "Đồng hồ nam", price: "₫1.200.000", img: "/images/product4.jpg" },
-              { title: "Túi xách nữ", price: "₫650.000", img: "/images/product5.jpg" },
-              { title: "Áo hoodie", price: "₫400.000", img: "/images/product6.jpg" },
-              { title: "Tai nghe gaming", price: "₫1.050.000", img: "/images/product7.jpg" }
+              { title: "Đồng hồ nam", price: "₫1.200.000", img: dongho },
+              { title: "Túi xách nữ", price: "₫650.000", img: tuixach },
+              { title: "Áo hoodie", price: "₫400.000", img: ao },
+              { title: "Tai nghe gaming", price: "₫1.050.000", img: tainghe }
             ].map((p, i) => (
               <Card key={i} className="overflow-hidden border hover:shadow-lg transition">
                 <div className="h-40 bg-gray-100">
