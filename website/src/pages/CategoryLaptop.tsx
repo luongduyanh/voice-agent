@@ -3,9 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 export default function CategoryLaptop() {
   const navigate = useNavigate();
+
+  const handleAddToCart = (productName: string, price: string) => {
+    const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+    const newItem = {
+      id: Date.now(),
+      name: productName,
+      price: price,
+      quantity: 1,
+      image: ""
+    };
+
+    cartItems.push(newItem);
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+
+    toast({
+      title: "Đã thêm vào giỏ hàng",
+      description: `${productName} đã được thêm vào giỏ hàng`,
+    });
+  };
 
   const laptops = [
     { title: "Dell XPS 13", price: "₫28.000.000", img: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop" },
@@ -35,7 +55,12 @@ export default function CategoryLaptop() {
               <CardContent className="p-4">
                 <h4 className="font-semibold text-lg">{laptop.title}</h4>
                 <p className="text-primary font-bold mb-3">{laptop.price}</p>
-                <Button className="w-full">Thêm vào giỏ</Button>
+                <Button
+                  className="w-full"
+                  onClick={() => handleAddToCart(laptop.title, laptop.price)}
+                >
+                  Thêm vào giỏ
+                </Button>
               </CardContent>
             </Card>
           ))}

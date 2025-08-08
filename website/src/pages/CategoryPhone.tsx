@@ -3,9 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 export default function CategoryPhone() {
   const navigate = useNavigate();
+
+  const handleAddToCart = (productName: string, price: string) => {
+    const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+    const newItem = {
+      id: Date.now(),
+      name: productName,
+      price: price,
+      quantity: 1,
+      image: ""
+    };
+
+    cartItems.push(newItem);
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+
+    toast({
+      title: "Đã thêm vào giỏ hàng",
+      description: `${productName} đã được thêm vào giỏ hàng`,
+    });
+  };
 
   const phones = [
     { title: "iPhone 15 Pro", price: "₫29.990.000", img: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop" },
@@ -35,7 +55,12 @@ export default function CategoryPhone() {
               <CardContent className="p-4">
                 <h4 className="font-semibold text-lg">{phone.title}</h4>
                 <p className="text-primary font-bold mb-3">{phone.price}</p>
-                <Button className="w-full">Thêm vào giỏ</Button>
+                <Button
+                  className="w-full"
+                  onClick={() => handleAddToCart(phone.title, phone.price)}
+                >
+                  Thêm vào giỏ
+                </Button>
               </CardContent>
             </Card>
           ))}

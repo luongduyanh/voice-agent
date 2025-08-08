@@ -14,6 +14,7 @@ import CategoryPhone from "./pages/CategoryPhone";
 import CategoryLaptop from "./pages/CategoryLaptop";
 import Sale from "./pages/Sale";
 import Cart from "./pages/Cart";
+import OrderConfirmation from "./pages/OrderConfirmation";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/category/laptop" element={<CategoryLaptop />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/orderconfirmation" element={<OrderConfirmation />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/spa-wellness" element={<SpaWellness />} />
           <Route path="/fitness-center" element={<FitnessCenter />} />

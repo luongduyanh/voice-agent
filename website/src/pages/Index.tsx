@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, ShoppingCart, Percent, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 import LiveKitWidget from "@/components/ai_avatar/LiveKitWidget";
 
 // Import images
@@ -17,6 +18,26 @@ import ao from "@/assets/ao.png";
 export default function Index() {
   const [showSupport, setShowSupport] = useState(false);
   const navigate = useNavigate();
+
+  const handleAddToCart = (productName: string, price: string) => {
+    // Add to cart logic here (could use localStorage, context, or state management)
+    const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+    const newItem = {
+      id: Date.now(),
+      name: productName,
+      price: price,
+      quantity: 1,
+      image: ""
+    };
+
+    cartItems.push(newItem);
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+
+    toast({
+      title: "Đã thêm vào giỏ hàng",
+      description: `${productName} đã được thêm vào giỏ hàng`,
+    });
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -70,7 +91,11 @@ export default function Index() {
                 <CardContent className="p-4">
                   <h4 className="font-semibold text-lg">{p.title}</h4>
                   <p className="text-primary font-bold mb-3">{p.price}</p>
-                  <Button variant="secondary" className="w-full" onClick={() => navigate("/cart")}>
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={() => handleAddToCart(p.title, p.price)}
+                  >
                     Thêm vào giỏ
                   </Button>
                 </CardContent>
