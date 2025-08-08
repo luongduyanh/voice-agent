@@ -23,8 +23,8 @@ class Assistant(Agent):
 async def entrypoint(ctx: agents.JobContext):
     session = AgentSession(
         stt=openai.STT(language="vi"),
-        # llm=openai.LLM(),
-        llm=openai.LLM(base_url="https://mkp-api.fptcloud.com/", api_key=os.environ.get("FPT_API_KEY"), model="gpt-oss-20b"),
+        llm=openai.LLM(),
+        # llm=openai.LLM(base_url="https://mkp-api.fptcloud.com/", api_key=os.environ.get("FPT_API_KEY"), model="gpt-oss-20b"),
         tts=openai.TTS(voice="ballad"),
         vad=silero.VAD.load(),
     )

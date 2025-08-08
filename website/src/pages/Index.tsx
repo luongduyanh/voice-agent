@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, ShoppingCart, Percent, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import LiveKitWidget from "@/components/ai_avatar/LiveKitWidget";
 
 // Import images
@@ -15,6 +16,7 @@ import ao from "@/assets/ao.png";
 
 export default function Index() {
   const [showSupport, setShowSupport] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -24,12 +26,12 @@ export default function Index() {
           <h1 className="text-2xl font-bold text-primary">ShopEZ</h1>
           <nav className="hidden md:flex gap-6 text-gray-700">
             <a href="#home" className="hover:text-primary">Trang chủ</a>
-            <a href="#products" className="hover:text-primary">Sản phẩm</a>
-            <a href="#offers" className="hover:text-primary">Ưu đãi</a>
-            <a href="#bestsellers" className="hover:text-primary">Bán chạy</a>
+            <button onClick={() => navigate("/category/phone")} className="hover:text-primary">Điện thoại</button>
+            <button onClick={() => navigate("/category/laptop")} className="hover:text-primary">Laptop</button>
+            <button onClick={() => navigate("/sale")} className="hover:text-primary">Khuyến mãi</button>
             <a href="#contact" className="hover:text-primary">Liên hệ</a>
           </nav>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => navigate("/cart")}>
             <ShoppingCart className="h-4 w-4 mr-2" /> Giỏ hàng
           </Button>
         </div>
@@ -41,10 +43,10 @@ export default function Index() {
           <h2 className="text-4xl font-bold mb-4">Mua sắm dễ dàng, giá tốt mỗi ngày</h2>
           <p className="text-gray-600 mb-6">Khám phá hàng ngàn sản phẩm chất lượng, giao hàng nhanh chóng</p>
           <div className="flex justify-center gap-4">
-            <Button size="lg">
+            <Button size="lg" onClick={() => navigate("/category/phone")}>
               Xem sản phẩm <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" onClick={() => navigate("/sale")}>
               Khuyến mãi hôm nay
             </Button>
           </div>
@@ -68,7 +70,7 @@ export default function Index() {
                 <CardContent className="p-4">
                   <h4 className="font-semibold text-lg">{p.title}</h4>
                   <p className="text-primary font-bold mb-3">{p.price}</p>
-                  <Button variant="secondary" className="w-full">
+                  <Button variant="secondary" className="w-full" onClick={() => navigate("/cart")}>
                     Thêm vào giỏ
                   </Button>
                 </CardContent>
