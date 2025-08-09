@@ -41,7 +41,7 @@ async def entrypoint(ctx: agents.JobContext):
     )
 
     avatar = bithuman.AvatarSession(
-        model_path="./avatar.imx",  # This example uses a demo model installed in the current directory
+        model_path="./lhv_avatar.imx",  # This example uses a demo model installed in the current directory
     )
 
     # Start the avatar and wait for it to join

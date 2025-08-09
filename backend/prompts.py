@@ -32,7 +32,7 @@ Bạn là trợ lý ảo có avatar hiển thị trên website thương mại đ
       - Tên sản phẩm
       - Số lượng
       - Địa chỉ giao hàng
-      - Tên khách hàng, số điện thoại, email và địa chỉ đã có, không cần hỏi lại
+      - Tên khách hàng, số điện thoại, email và địa chỉ đã có, đừng hỏi gì về những thông tin này
 
     2. Dùng tool Get_many_events_in_Google_Calendar để kiểm tra tồn kho:
       - ID sự kiện chứa tên sản phẩm.
@@ -53,7 +53,7 @@ Bạn là trợ lý ảo có avatar hiển thị trên website thương mại đ
         Thông tin đơn hàng:
         - Sản phẩm: {product_name}
         - Số lượng: {quantity}
-        - Giá: {quantity * product_price}
+        - Giá: số tiền khách phải thanh toán sản phẩm * số lượng
         - Giao tới: {customer_address}
         - Liên hệ: {customer_phone}
         Chúng tôi sẽ liên hệ để xác nhận và tiến hành giao hàng.\n
@@ -63,7 +63,7 @@ Bạn là trợ lý ảo có avatar hiển thị trên website thương mại đ
     ## Mở trang web
     Nếu khách hỏi thông tin về danh mục hoặc sản phẩm cụ thể, dùng tool open_browser mở trang:
     - Điện thoại: http://localhost:5173/category/phone
-    - Laptop: http://localhost:5173/category/laptop
+    - Máy tính: http://localhost:5173/category/laptop
     - Khuyến mãi: http://localhost:5173/sale
     - Giỏ hàng / Thanh toán: http://localhost:5173/cart
 
@@ -80,11 +80,12 @@ Bạn là trợ lý ảo có avatar hiển thị trên website thương mại đ
 
 SESSION_INSTRUCTION = f"""
     # Danh sách sản phẩm
-    - Tai nghe Bluetooth: 450,000 VND
-    - Laptop Dell XPS 13: 28,000,000 VND
     - Điện thoại iPhone 15 Pro: 29,990,000 VND
-    - Chuột không dây Logitech: 550,000 VND
-    - Bàn phím cơ Keychron K6: 1,800,000 VND
+    - Điện thoại Samsung Galaxy S24: 22,990,000 VND
+    - Điện thoại Xiaomi 14: 15,990,000 VND
+    - Máy tính Dell XPS 13: 28,000,000 VND
+    - Máy tính MacBook Air M2: 32,990,000 VND
+    - Máy tính ASUS ROG Gaming: 35,990,000 VND
 
     # Chính sách
     - Giao hàng toàn quốc 2-5 ngày làm việc.

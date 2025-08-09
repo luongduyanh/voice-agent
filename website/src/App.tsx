@@ -15,6 +15,7 @@ import CategoryLaptop from "./pages/CategoryLaptop";
 import Sale from "./pages/Sale";
 import Cart from "./pages/Cart";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import DiscordSupport from "./pages/DiscordSupport";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/fitness-center" element={<FitnessCenter />} />
           <Route path="/valet-parking" element={<ValetParking />} />
           <Route path="/bookingconfirmation" element={<BookingConfirmation />} />
+          <Route path="/discord-support" element={<DiscordSupport />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

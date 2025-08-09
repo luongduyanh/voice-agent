@@ -61,7 +61,10 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				'discord-dark': '#36393f',
+				'discord-darker': '#2f3136',
+				'discord-blue': '#5865f2'
 			},
 			backgroundImage: {
 				'gradient-hero': 'var(--gradient-hero)',
