@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5001"
+    environment:
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - N8N_MCP_SERVER_URL=${N8N_MCP_SERVER_URL}
+      - BITHUMAN_API_SECRET=${BITHUMAN_API_SECRET}
+      - FPT_API_KEY=${FPT_API_KEY}
+    volumes:
+      - ./backend:/app
+      - ./backend/lhv_avatar.imx:/app/lhv_avatar.imx:ro
+    networks:
+      - app-network
+
+  ai-agent:
+    build: ./backend
+    command: python agent.py dev
+    environment:
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - N8N_MCP_SERVER_URL=${N8N_MCP_SERVER_URL}
+      - BITHUMAN_API_SECRET=${BITHUMAN_API_SECRET}
+      - FPT_API_KEY=${FPT_API_KEY}
+    volumes:
+      - ./backend:/app
+      - ./backend/lhv_avatar.imx:/app/lhv_avatar.imx:ro
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  website:
+    build: ./website
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_LIVEKIT_URL=${LIVEKIT_URL}
+    volumes:
+      - ./website:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
