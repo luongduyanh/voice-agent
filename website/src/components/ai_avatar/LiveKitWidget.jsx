@@ -1,65 +1,58 @@
-import { useState, useCallback, useEffect } from "react";
-import { LiveKitRoom, RoomAudioRenderer } from "@livekit/components-react";
-import "@livekit/components-styles";
-import AvatarVoiceAgent from "./AvatarVoiceAgent";
-import "./LiveKitWidget.css";
+import React, { useEffect, useState } from 'react';
+import { RoomAudioRenderer, useTracks, LiveKitRoom } from '@livekit/components-react';
+import { Track } from 'livekit-client';
+import AvatarVoiceAgent from './AvatarVoiceAgent';
 
-const LiveKitWidget = ({ setShowSupport }) => {
-  const [token, setToken] = useState(null);
-  const [isConnecting, setIsConnecting] = useState(true);
+// Placeholder function to fetch a token - replace with real backend call.
+async function fetchToken() {
+  // In a real app this would call your backend.
+  return {
+    url: import.meta.env.VITE_LIVEKIT_URL || 'wss://example.livekit.cloud',
+    token: 'DUMMY_TOKEN'
+  };
+}
 
-  const getToken = useCallback(async () => {
-    try {
-      console.log("run");
-      const response = await fetch(
-        `/api/getToken?name=${encodeURIComponent("admin")}`
-      );
-      const token = await response.text();
-      
-      setToken(token);
-      setIsConnecting(false);
-    } catch (error) {
-      console.error(error);
-      setIsConnecting(false);
-    }
-  }, []);
+const LiveKitWidget = () => {
+  const [info, setInfo] = useState(null);
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    getToken();
-  }, [getToken]);
+    (async () => {
+      const tk = await fetchToken();
+      setInfo(tk);
+    })();
+  }, []);
+
+  if (!info) return <div className="p-4 text-sm">Đang khởi tạo trợ lý...</div>;
 
   return (
-    
-    <div className="modal-content">
-      <div className="support-room">
-        {isConnecting ? (
-          <div className="connecting-status">
-            <h2>Connecting to support...</h2>
-            <button
-              type="button"
-              className="cancel-button"
-              onClick={() => setShowSupport(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        ) : token ? (
-          <LiveKitRoom
-            serverUrl={import.meta.env.VITE_LIVEKIT_URL}
-            token={token}
-            connect={true}
-            video={false}
-            audio={true}
-            onDisconnected={() => {
-              setShowSupport(false);
-              setIsConnecting(true);
-            }}
-          >
-            <RoomAudioRenderer />
-            <AvatarVoiceAgent />
-          </LiveKitRoom>
-        ) : null}
-      </div>
+    <div className="fixed bottom-4 right-4 w-80 z-50 bg-white border rounded-lg shadow-lg overflow-hidden">
+      <LiveKitRoom
+        token={info.token}
+        serverUrl={info.url}
+        connect={true}
+        audio={true}
+        video={false}
+        onConnected={() => setConnected(true)}
+        style={{ height: '100%' }}
+      >
+        <RoomAudioRenderer />
+        <TracksAvatar />
+        {!connected && <div className="p-2 text-xs text-gray-500">Đang kết nối...</div>}
+      </LiveKitRoom>
+    </div>
+  );
+};
+
+const TracksAvatar = () => {
+  const tracks = useTracks([
+    { source: Track.Source.Camera, withPlaceholder: true },
+    { source: Track.Source.Microphone, withPlaceholder: true }
+  ]);
+
+  return (
+    <div className="w-full h-60 bg-black flex items-center justify-center">
+      <AvatarVoiceAgent tracks={tracks} />
     </div>
   );
 };

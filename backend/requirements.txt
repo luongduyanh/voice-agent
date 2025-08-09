@@ -1,13 +1,3 @@
-livekit-agents
-livekit-plugins-openai
-livekit-plugins-noise-cancellation
-livekit-plugins-bithuman
-livekit-plugins-silero
-requests
+livekit-agents>=0.8.0
 python-dotenv
-pydantic-ai-slim[openai,mcp]
-livekit-agents[tavus]~=1.0
-tzdata
-flask[async]
-flask
-flask-cors
+openai>=1.0.0

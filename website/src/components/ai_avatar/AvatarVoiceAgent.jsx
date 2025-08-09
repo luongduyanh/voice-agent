@@ -1,56 +1,33 @@
-import {
-  useVoiceAssistant,
-  BarVisualizer,
-  VoiceAssistantControlBar,
-  useTrackTranscription,
-  useLocalParticipant,
-} from "@livekit/components-react";
-import { Track } from "livekit-client";
-import { useEffect, useState } from "react";
-import { useTracks, VideoTrack } from '@livekit/components-react';
-import "./AvatarVoiceAgent.css";
+import React, { useState } from 'react';
+import { Track } from 'livekit-client';
 
-const Message = ({ type, text }) => {
-  return <div className="message">
-    <strong className={`message-${type}`}>
-      {type === "agent" ? "Agent: " : "You: "}
-    </strong>
-    <span className="message-text">{text}</span>
-  </div>;
-};
+const AvatarVoiceAgent = ({ tracks }) => {
+  const [muted, setMuted] = useState(false);
 
-const AvatarVoiceAgent = () => {
-  const { state, audioTrack, agentTranscriptions } = useVoiceAssistant();
-  const localParticipant = useLocalParticipant();
-  const { segments: userTranscriptions } = useTrackTranscription({
-    publication: localParticipant.microphoneTrack,
-    source: Track.Source.Microphone,
-    participant: localParticipant.localParticipant,
-  });
-  const trackRefs = useTracks([Track.Source.Camera]);
-  const localCamTrackRef = trackRefs.find((trackRef) => trackRef.participant.name = 'admin');
-
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    const allMessages = [
-      ...(agentTranscriptions?.map((t) => ({ ...t, type: "agent" })) ?? []),
-      ...(userTranscriptions?.map((t) => ({ ...t, type: "user" })) ?? []),
-    ].sort((a, b) => a.firstReceivedTime - b.firstReceivedTime);
-    setMessages(allMessages);
-  }, [agentTranscriptions, userTranscriptions]);
+  const cameraTrack = tracks.find(t => t.publication?.source === Track.Source.Camera);
 
   return (
-    <div className="voice-assistant-container">
-      <div className="visualizer-container">
-        <BarVisualizer state={state} barCount={5} trackRef={audioTrack} />
-      </div>
-      <>
-      {localCamTrackRef ? <VideoTrack trackRef={localCamTrackRef} /> : <div>Calling the Concierce...</div>}
-      </>
-      <div className="control-section">
-        <VoiceAssistantControlBar />
-      </div>
+    <div className="relative w-full h-full">
+      {cameraTrack && cameraTrack.publication?.isSubscribed ? (
+        <video
+          ref={ref => {
+            if (ref && cameraTrack.publication.track) {
+              ref.srcObject = new MediaStream([cameraTrack.publication.track.mediaStreamTrack]);
+            }
+          }}
+          autoPlay
+          className="w-full h-full object-cover"
+          muted={true}
+        />
+      ) : (
+        <div className="flex items-center justify-center w-full h-full text-white text-sm">Mai</div>
+      )}
+      <button
+        onClick={() => setMuted(m => !m)}
+        className="absolute top-2 right-2 bg-white/80 text-xs px-2 py-1 rounded"
+      >
+        {muted ? 'Bật mic' : 'Tắt mic'}
+      </button>
     </div>
   );
 };

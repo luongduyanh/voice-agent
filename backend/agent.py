@@ -1,70 +1,47 @@
-from dotenv import load_dotenv
-from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
-from livekit import agents
-from livekit.agents import AgentSession, Agent, RoomInputOptions
-from livekit.plugins import (
-    openai,
-    noise_cancellation, silero, bithuman,
-)
-from mcp_client import MCPServerSse
-from mcp_client.agent_tools import MCPToolsIntegration
-import os
-from tools import open_url
-from livekit.plugins import tavus
-load_dotenv()
+import asyncio
+import logging
+from livekit.agents import Agent, AutoSubscribe, JobContext
+from livekit.agents import cli, llm
+from livekit.agents.voice import VoiceSession
+from livekit.agents.stt import openai as openai_stt
+from livekit.agents.tts import openai as openai_tts
+from livekit.agents.llm import openai as openai_llm
+from livekit.agents.vad import silero
+from livekit.agents.contrib import bithuman
 
+from prompts import AGENT_INSTRUCTION
+from tools import open_url
+
+logger = logging.getLogger(__name__)
 
 class Assistant(Agent):
-    def __init__(self) -> None:
-        super().__init__(instructions=AGENT_INSTRUCTION,
-                         tools=[open_url],)
+    def __init__(self):
+        super().__init__(instructions=AGENT_INSTRUCTION, tools=[open_url])
 
+    async def on_start(self, session: VoiceSession):
+        logger.info("Assistant started with session %s", session.session_id)
 
-async def entrypoint(ctx: agents.JobContext):
-    session = AgentSession(
-        stt=openai.STT(language="vi"),
-        # llm=openai.LLM(),
-        llm=openai.LLM(base_url="https://mkp-api.fptcloud.com/", api_key=os.environ.get("FPT_API_KEY"), model="gpt-oss-20b"),
-        tts=openai.TTS(voice="ballad"),
-        vad=silero.VAD.load(),
-    )
+async def entrypoint(ctx: JobContext):
+    logger.info("Starting Mai agent...")
 
-    mcp_server = MCPServerSse(
-        params={"url": os.environ.get("N8N_MCP_SERVER_URL")},
-        cache_tools_list=True,
-        name="SSE MCP Server"
-    )
+    # Configure voice session
+    stt = openai_stt.STT(language="vi")
+    llm_client = openai_llm.LLM()
+    tts = openai_tts.TTS()
+    vad = silero.VAD()
 
-    agent = await MCPToolsIntegration.create_agent_with_tools(
-        agent_class=Assistant,
-        mcp_servers=[mcp_server]
-    )
+    voice = VoiceSession(stt=stt, llm=llm_client, tts=tts, vad=vad, agent_cls=Assistant,
+                         auto_subscribe=AutoSubscribe.AUDIO_ONLY)
 
-    avatar = bithuman.AvatarSession(
-        model_path="./avatar.imx",  # This example uses a demo model installed in the current directory
-    )
+    # Create avatar session (placeholder wiring; real integration may differ)
+    avatar = bithuman.AvatarSession()
 
-    # Start the avatar and wait for it to join
-    await avatar.start(session, room=ctx.room)
+    await voice.start(ctx)  # start the voice session
 
+    # pipe audio to avatar (pseudo / simplified)
+    voice.audio_out.subscribe(lambda frame: avatar.handle_audio(frame))
 
-    await session.start(
-        room=ctx.room,
-        agent=agent,
-        room_input_options=RoomInputOptions(
-            # LiveKit Cloud enhanced noise cancellation
-            # - If self-hosting, omit this parameter
-            # - For telephony applications, use `BVCTelephony` for best results
-            noise_cancellation=noise_cancellation.BVC(),
-        ),
-    )
-
-    await ctx.connect()
-
-    await session.generate_reply(
-        instructions=SESSION_INSTRUCTION,
-    )
-
+    await asyncio.Event().wait()  # keep running
 
 if __name__ == "__main__":
-    agents.cli.run_app(agents.WorkerOptions(entrypoint_fnc=entrypoint))
+    cli.run_app(entrypoint)

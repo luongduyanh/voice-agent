@@ -1,13 +1,15 @@
-from livekit.agents import function_tool, RunContext
-import webbrowser
+from livekit.agents import llm
+from livekit.agents.llm import tool
+import logging
 
-@function_tool
-async def open_url(url: str, context: RunContext)-> str:
+logger = logging.getLogger(__name__)
+
+@tool()
+async def open_url(url: str):
+    """Yêu cầu giao diện người dùng chuyển hướng đến một phần cụ thể của trang web.
+
+    Tham số:
+      url: Anchor hoặc đường dẫn (ví dụ '#products', '#offers').
     """
-    Opens a URL in the user's default web browser.
-    """
-    try:
-        webbrowser.open(url)
-        return f"Opened {url} in your web browser."
-    except Exception as e:
-        return f"Failed to open {url}. Error: {str(e)}"
+    logger.info(f"Tool open_url called with: {url}")
+    return f"Đang điều hướng đến {url}"

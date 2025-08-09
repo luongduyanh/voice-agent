@@ -1,40 +1,44 @@
-# 🛠️ Setup Instructions
-Add your information to the .env file in the backend folder.
-This should include your API keys, model settings, and any other required variables.
+# ShopEZ + Mai Voice Agent (PoC)
 
-## Go to the backend folder:
-cd backend
+Monorepo style structure containing:
 
+- `website/` React + Vite + Tailwind storefront with embedded LiveKit widget.
+- `backend/` Python `livekit-agents` based voice assistant named *Mai*.
 
-## Install requirements:
-pip install -r requirements.txt
+## Frontend (website)
 
+Install & run:
 
-## Start the backend server:
-python server.py
-
-
-## In a new terminal, start the AI agent:
-python agent.py dev
-
-Now go to the website folder and add your LiveKit URL to the .env file.
-
-## Navigate to the website folder:
-cd website
-
-## Install the frontend dependencies:
-npm i
-
-npm install @livekit/components-react @livekit/components-styles livekit-client --save
-
-## Start the frontend:
+```bash
+npm install
 npm run dev
+```
 
-# ✅ Requirements
-Python 3.x installed
+Configure environment variables (create `website/.env`):
+```
+VITE_LIVEKIT_URL=wss://your.livekit.server
+```
+Token fetch is mocked inside `LiveKitWidget.jsx` (replace with real backend endpoint).
 
-nvm installed
+## Backend (agent)
 
-Node.js installed
+Create virtual env & install:
 
+```bash
+python -m venv .venv
+.venv/Scripts/activate  # Windows PowerShell: .venv\Scripts\Activate.ps1
+pip install -r backend/requirements.txt
+```
 
+Run agent (make sure LIVEKIT keys & OpenAI keys are in environment if required by livekit-agents version):
+```bash
+python backend/agent.py
+```
+
+## Tooling
+The agent exposes a single tool `open_url` which the LLM can call to instruct the frontend to navigate user to a section anchor.
+
+## Notes
+- Avatar integration (`bithuman.AvatarSession`) is placeholder wiring.
+- Replace dummy LiveKit token logic with secure server generated tokens.
+- All assistant responses are in Vietnamese as per prompt.
